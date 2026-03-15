@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Kharsan Constructions{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center py-5" style="animation: fadeIn 0.8s ease-in;">
+    <div style="animation: slideUp 0.8s ease-out 0.2s both;">
+        <h1 class="display-3 gradient-text">Welcome to Kharsan Constructions</h1>
+    </div>
+    <div style="animation: slideUp 0.8s ease-out 0.3s both;">
+        <p class="display-6" style="color: #667eea; font-weight: 600; margin-bottom: 20px; font-size: 1.8rem;">Building Legacies</p>
+    </div>
+    <div style="animation: slideUp 0.8s ease-out 0.4s both;">
+        <p class="lead" style="color: #666; font-size: 1.2rem; margin-bottom: 30px;">Manage your construction projects efficiently with our comprehensive platform.</p>
+    </div>
+    <div style="animation: slideUp 0.8s ease-out 0.5s both;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 1.1rem; font-weight: 600; border-radius: 12px; transition: all 0.3s ease;">
+            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+        </a>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .gradient-text {
+        font-size: 3.5rem !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+
+    .hero-section h1:hover {
+        transform: scale(1.02);
+        transition: transform 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:active {
+        transform: translateY(-1px);
+    }
+</style>
+{% endblock %}

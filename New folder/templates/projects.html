@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Projects - Kharsan Constructions{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-project-diagram"></i> Projects</h1>
+    <div>
+        <a href="{{ url_for('export_table', table='projects') }}" class="btn btn-success me-2"><i class="fas fa-file-csv"></i> Export CSV</a>
+        <a href="{{ url_for('add_project') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Project</a>
+    </div>
+</div>
+
+{% if project_details %}
+    {% for item in project_details %}
+    <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0">{{ item.project['name'] }}</h5>
+                <small class="text-muted">ID: {{ item.project['project_id'] }} | Location: {{ item.project['site_location'] }}</small>
+            </div>
+            <div>
+                <span class="badge {% if item.project['status'] == 'active' %}bg-success{% elif item.project['status'] == 'completed' %}bg-secondary{% else %}bg-warning{% endif%}">
+                    {{ item.project['status']|upper }}
+                </span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>Client ID:</strong> {{ item.project['client_id'] }}<br>
+                    <strong>Start Date:</strong> {{ item.project['start_date'] }}
+                </div>
+                <div class="col-md-5">
+                    <strong>Assigned Workers:</strong>
+                    {% if item.workers %}
+                    <ul class="mb-0">
+                        {% for worker in item.workers %}
+                        <li>{{ worker['name'] }} - <em>{{ worker['role'] }}</em></li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span class="text-muted">No workers assigned</span>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <strong>Materials Assigned:</strong>
+                    {% if item.materials %}
+                    <ul class="mb-0">
+                        {% for material in item.materials %}
+                        <li>{{ material['name'] }} (Qty: {{ material['quantity_used'] }})</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span class="text-muted">No materials assigned</span>
+                    {% endif %}
+                </div>
+            </div>
+            <hr class="my-2">
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('edit_project', id=item.project['project_id']) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                <form method="post" action="{{ url_for('delete_project', id=item.project['project_id']) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this project?')">
+                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">No projects found. <a href="{{ url_for('add_project') }}">Create one now!</a></div>
+{% endif %}
+{% endblock %}

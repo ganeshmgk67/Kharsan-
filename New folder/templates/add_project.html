@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Add Project - Kharsan Constructions{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-plus"></i> Add New Project</h3>
+            </div>
+            <div class="card-body">
+                <form id="addProjectForm" action="{{ url_for('add_project') }}" method="post">
+                    <!-- Basic Project Information -->
+                    <h5 class="mb-3"><i class="fas fa-info-circle"></i> Project Information</h5>
+                    <div class="mb-3">
+                        <label for="client_id" class="form-label">Client</label>
+                        <select class="form-select" id="client_id" name="client_id" required>
+                            <option value="">-- Select a Client --</option>
+                            {% for client in clients %}
+                            <option value="{{ client.client_id }}">{{ client.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Project Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="site_location" class="form-label">Site Location</label>
+                        <input type="text" class="form-control" id="site_location" name="site_location" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                            <option value="on-hold">On Hold</option>
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    <!-- Worker Assignment -->
+                    <h5 class="mb-3"><i class="fas fa-users"></i> Assign Workers to Project</h5>
+                    <div class="mb-3">
+                        {% if workers %}
+                        <div class="border rounded p-3">
+                            {% for worker in workers %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="worker_{{ worker.worker_id }}" name="worker_ids" value="{{ worker.worker_id }}">
+                                <label class="form-check-label" for="worker_{{ worker.worker_id }}">
+                                    <strong>{{ worker.name }}</strong> - {{ worker.role }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info">No available workers. Please <a href="{{ url_for('add_worker') }}">add workers</a> first.</div>
+                        {% endif %}
+                    </div>
+
+                    <hr>
+
+                    <!-- Materials Section -->
+                    <h5 class="mb-3"><i class="fas fa-cubes"></i> Add Materials Needed</h5>
+                    <div id="materialsContainer">
+                        <div class="material-row mb-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="material_names" placeholder="Material Name (e.g., Cement)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="material_suppliers" placeholder="Supplier Name">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" name="material_quantities" placeholder="Quantity">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="removeMaterialRow(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm mb-3" onclick="addMaterialRow()">
+                        <i class="fas fa-plus"></i> Add Another Material
+                    </button>
+
+                    <hr>
+
+                    <!-- Form Actions -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Project</button>
+                        <a href="{{ url_for('projects') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function addMaterialRow() {
+    const container = document.getElementById('materialsContainer');
+    const newRow = document.createElement('div');
+    newRow.className = 'material-row mb-3';
+    newRow.innerHTML = `
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="material_names" placeholder="Material Name (e.g., Cement)">
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="material_suppliers" placeholder="Supplier Name">
+            </div>
+            <div class="col-md-3">
+                <input type="number" class="form-control" name="material_quantities" placeholder="Quantity">
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeMaterialRow(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    container.appendChild(newRow);
+}
+
+function removeMaterialRow(button) {
+    button.closest('.material-row').remove();
+}
+</script>
+
+<style>
+.material-row {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.material-row .row {
+    align-items: center;
+}
+</style>
+{% endblock %}
